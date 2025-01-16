@@ -6,18 +6,19 @@ import (
 	"reflect"
 )
 
-// 用于自动注册路由
+// Test 用于自动注册路由
 type Test struct{}
 
 // 初始化生成路由
 func init() {
-	fpath := Test{}
-	ci.Register(&fpath, reflect.TypeOf(fpath).PkgPath())
+	fPath := Test{}
+	ci.Register(&fPath, reflect.TypeOf(fPath).PkgPath())
 }
 
 // Index 方法
 func (hc Test) Index(c *gin.Context) {
 	c.JSON(200, gin.H{
-		"message": "Welcome to the home page of admin!",
+		"code":    0,
+		"message": "Welcome to the home page of test!",
 	})
 }

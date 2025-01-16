@@ -1,1 +1,2 @@
-/weapp/test/index
+/api/weapp/test/index
+/api/weapp/test/index

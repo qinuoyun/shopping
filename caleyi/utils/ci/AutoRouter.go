@@ -24,24 +24,29 @@ var Routes = []Route{}
 
 // Register 注册控制器
 func Register(controller interface{}, PkgPathstr string) bool {
-	fmt.Printf("日志：%v\n", PkgPathstr)
+	//fmt.Printf("日志[PkgPathstr]：%v\n", PkgPathstr)
 	vbf := reflect.ValueOf(controller)
 	//非控制器或无方法则直接返回
 	if vbf.NumMethod() == 0 {
 		return false
 	}
+	basePkg := "/api"
 	rootPkg := ""
 	if strings.Contains(PkgPathstr, "/app") {
 		PkgPathArr := strings.Split(PkgPathstr, "/app")
 		rootPkg = PkgPathArr[len(PkgPathArr)-1]
 	}
+	//重置URL地址链接
+	rootPkg = basePkg + rootPkg
+
+	//fmt.Println("查看根[rootPkg]=", rootPkg)
 	ctrlName := reflect.TypeOf(controller).String()
-	// fmt.Println("ctrlName=", ctrlName)
+	//fmt.Println("ctrlName=", ctrlName)
 	module := ctrlName
 	if strings.Contains(ctrlName, ".") {
 		module = ctrlName[strings.Index(ctrlName, ".")+1:]
 	}
-	// fmt.Println("module=", module)
+	//fmt.Println("module=", module)
 	if module == "Index" { //去index
 		module = "/"
 	} else {
@@ -84,32 +89,15 @@ func Register(controller interface{}, PkgPathstr string) bool {
 
 // Bind 绑定路由 m是方法GET POST等
 func Bind(e *gin.Engine) {
-	fmt.Printf("日志3355：%v\n", Routes)
-
 	for _, route := range Routes {
-
-		fmt.Printf("A-日志route.httpMethod:：%v\n", route.path)
-		if route.httpMethod == "GET" {
-			fmt.Printf("日志2：%v\n", route.path)
-
-			e.GET(route.path, match(route.path, route))
-		}
-		if route.httpMethod == "POST" {
-			e.POST(route.path, match(route.path, route))
-		}
-		if route.httpMethod == "DELETE" {
-			e.DELETE(route.path, match(route.path, route))
-		}
-		if route.httpMethod == "PUT" {
-			e.PUT(route.path, match(route.path, route))
-		}
+		//只允许GET或者POST
+		e.Match([]string{"GET", "POST"}, route.path, match(route.path, route))
 	}
 }
 
 // 根据path匹配对应的方法
 func match(path string, route Route) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		fields := strings.Split(path, "/")
 		fmt.Println("00000-fields,len(fields)=", fields, len(fields))
 		if len(fields) < 3 {

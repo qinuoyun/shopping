@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-// 覆盖写入文件
+// WriteToFile 覆盖写入文件
 // filePath文件路径
 func WriteToFile(filePath string, content string) error {
 	if _, err := os.Stat(filePath); err != nil {
@@ -55,7 +55,7 @@ func ReaderFileByline(filePath string) []interface{} {
 	return list
 }
 
-// 一次性读取全部文件
+// ReaderFileBystring 一次性读取全部文件
 // filePath文件路径
 func ReaderFileBystring(filePath string) string {
 	file, err := os.Open(filePath)
