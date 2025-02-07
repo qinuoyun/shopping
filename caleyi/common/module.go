@@ -3,7 +3,6 @@ package common
 import (
 	"fmt"
 	"github.com/qinuoyun/shopping/caleyi/utils/ci"
-	"gopkg.in/ini.v1"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -14,18 +13,12 @@ import (
 )
 
 func InitModule() {
-	// 读取.ini 里面的数据库配置
-	config, err := ini.Load("./config.ini")
-	if err != nil {
-		fmt.Printf("Fail to read file: %v", err)
-		os.Exit(1)
-	}
-
-	ip := config.Section("mysql").Key("ip").String()
-	port := config.Section("mysql").Key("port").String()
-	user := config.Section("mysql").Key("user").String()
-	password := config.Section("mysql").Key("password").String()
-	database := config.Section("mysql").Key("database").String()
+	//读取配置文件
+	ip := ci.C("mysql.ip")
+	port := ci.C("mysql.port")
+	user := ci.C("mysql.user")
+	password := ci.C("mysql.password")
+	database := ci.C("mysql.database")
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),

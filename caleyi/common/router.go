@@ -5,6 +5,7 @@ package common
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/qinuoyun/shopping/caleyi/middleware"
 	"github.com/qinuoyun/shopping/caleyi/utils/ci"
 	"time"
 )
@@ -23,10 +24,13 @@ func InitRouter() *gin.Engine {
 	R.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
-		AllowHeaders:     []string{"X-Requested-With", "Content-Type", "Authorization", "Businessid", "verify-encrypt", "ignoreCancelToken", "verify-time"},
+		AllowHeaders:     []string{"X-Requested-With", "Content-Type", "Authorization", "BusinessId", "verify-encrypt", "ignoreCancelToken", "verify-time"},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+
+	//4.验证token
+	R.Use(middleware.JwtVerify)
 
 	//5.找不到路由
 	R.NoRoute(func(c *gin.Context) {
